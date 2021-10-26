@@ -9,6 +9,8 @@ output:
     number_sections: yes
 ---
 
+<!-- my code folding wasn't working when I tried so it doesn't appear here -->
+
 ```{r setup, include=TRUE, warning = FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -80,4 +82,35 @@ The p-value of `r round(trees_t$p.value, 5)` means that there is a `r round(tree
 
 Therefore, we reject the null hypothesis that the two tree populations have the same mean height. 
 
+## Example 2
+
+Using the `mpg` dataset to compare city gas mileage for SUVs and compact cars. 
+
+```{r}
+# create a subset called compact_suv that only contains observations where the class is suv OR compact
+
+compact_suv <- mpg %>% 
+  filter(class %in% c('suv', 'compact'))
+```
+
+```{r}
+ggplot(data = compact_suv, aes(x= cty)) +
+  geom_histogram(bins = 12) +
+  facet_wrap(~ class)
+
+# Quantile- Quantile plot
+ggplot(data = compact_suv, aes(sample = cty)) +
+  geom_qq() +
+  facet_wrap(~ class)
+```
+
+```{r}
+compact_suv_summary <- compact_suv %>% 
+  group_by(class) %>% 
+  summarize(mean_city = mean(cty),
+            sd_cty = round(sd(cty), 1),
+            sample_size = n())
+
+compact_suv_summary
+```
 
